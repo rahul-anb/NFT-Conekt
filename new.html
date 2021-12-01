@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
+  </head>
+</head>
+<body>
+    <script>
+      // connect to Moralis server
+      const serverUrl = "https://1mhrq4fu6yus.usemoralis.com:2053/server";
+      const appId = "OQ0FhkJazRyejr34ZeLSmlCpy92gx0XQFVC96MO8";
+      Moralis.start({ serverUrl, appId });
+    var a;
+      async function login() {
+        let user = Moralis.User.current();
+        if (!user) {
+          user = await Moralis.authenticate();
+            a=1;
+        }
+        if(a==1)
+        {
+            window.open("http://127.0.0.1:5500/trial.html", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=800,height=400");
+        }
+        console.log("logged in user:", user);
+      }
+      async function logOut() {
+        await Moralis.User.logOut();
+        console.log("logged out");
+      }
+      function getStats() {
+        const user = Moralis.User.current();
+        if (user) {
+          getUserTransactions(user);
+        }
+      }
+      async function getUserTransactions(user) {
+        // create query
+        const query = new Moralis.Query("EthTransactions");
+        query.equalTo("from_address", user.get("ethAddress"));
+        // run query
+        const results = await query.find();
+        console.log("user transactions:", results);
+      }
+    </script>
+    <button onclick="login()">LOGIN</button>
+    <button onclick="logOut()">LOGOUT</button>
+    <button onclick="getStats()">SECRET</button>
+
+
+</body>
+</html>
